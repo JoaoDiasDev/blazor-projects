@@ -1,0 +1,14 @@
+﻿<h4>@mensagem</h4>
+
+<button class="btn btn-info" @onclick="ExibirMensagemClick">
+    Exibir Mensagem
+</button>
+
+@code {
+    private string? mensagem;
+
+    private void ExibirMensagemClick()
+    {
+        mensagem = "Testando os modos de renderização do Blazor";
+    }
+}

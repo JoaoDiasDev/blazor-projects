@@ -1,0 +1,43 @@
+﻿@page "/employees"
+
+@inject EmployeeService empService
+
+<h3>Funcionários</h3>
+
+@if (employees == null)
+{
+    <img src="/images/basicloader.gif" />
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>Endereço</th>
+                <th>Cidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in employees)
+            {
+                <tr>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.Address</td>
+                    <td>@employee.City</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<Employee> employees;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await empService.GetEmployees();
+    }
+}

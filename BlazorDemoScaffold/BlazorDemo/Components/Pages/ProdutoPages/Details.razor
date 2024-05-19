@@ -1,0 +1,75 @@
+﻿@page "/produtos/details"
+@inject BlazorDemo.Data.BlazorDemoContext DB
+@using BlazorDemo.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Produto</h4>
+    <hr />
+    @if (produto is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@produto.Nome</dd>
+            <dt class="col-sm-2">Descricao</dt>
+            <dd class="col-sm-10">@produto.Descricao</dd>
+            <dt class="col-sm-2">Imagem</dt>
+           @*  <dd class="col-sm-10">@produto.ImagemUrl</dd> *@
+
+               <dd class="col-sm-10">
+                @if (!string.IsNullOrEmpty(produto.ImagemUrl))
+                {
+                    string imagePath = $"images/{produto.ImagemUrl}";
+                    string defaultImagePath = "images/semfoto.jpg";
+
+                    if (File.Exists($"wwwroot/{imagePath}"))
+                    {
+                        <img src="@($"/{imagePath}")" alt="@produto.Nome" style="max-width: 300px;" />
+                    }
+                    else
+                    {
+                        <img src="@($"/{defaultImagePath}")" alt="sem imagem" style="max-width: 300px;" />
+                    }
+                }
+                else
+                {
+                    <img src="/images/semfoto.jpg" alt="sem imagem" style="max-width: 300px;" />
+                }
+            </dd>
+
+            <dt class="col-sm-2">Preco</dt>
+            <dd class="col-sm-10">@produto.Preco</dd>
+            <dt class="col-sm-2">CategoriaId</dt>
+            <dd class="col-sm-10">@produto.CategoriaId</dd>
+        </dl>
+        <div>
+            <a href="@($"/produtos/edit?id={produto.Id}")">Edit</a> |
+            <a href="@($"/produtos")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Produto? produto;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        produto = await DB.Produto.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (produto is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

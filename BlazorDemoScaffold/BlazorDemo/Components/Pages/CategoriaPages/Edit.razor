@@ -1,0 +1,86 @@
+﻿@page "/Categoria/edit"
+@inject BlazorDemo.Data.BlazorDemoContext DB
+@using BlazorDemo.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Categoria</h4>
+<hr />
+@if (Categoria is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Categoria" OnValidSubmit="UpdateCategoria" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Categoria.Id" value="@Categoria.Id" />
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome:</label>
+                    <InputText id="nome" @bind-Value="Categoria.Nome" class="form-control" />
+                    <ValidationMessage For="() => Categoria.Nome" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/categoria">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Categoria? Categoria { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categoria ??= await DB.Categoria.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Categoria is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateCategoria()
+    {
+        DB.Attach(Categoria!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!CategoriaExists(Categoria!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/categoria");
+    }
+
+    bool CategoriaExists(int id)
+    {
+        return DB.Categoria.Any(e => e.Id == id);
+    }
+}

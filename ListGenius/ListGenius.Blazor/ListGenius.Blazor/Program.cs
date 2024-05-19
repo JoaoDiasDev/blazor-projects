@@ -1,4 +1,6 @@
 using ListGenius.Blazor.Components;
+using ListGenius.CrossCutting.DependenciesApp;
+using ListGenius.Infrastructure.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +9,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddInfrastructure(builder.Configuration);
+
 var app = builder.Build();
+
+CreateDatabase(app);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -32,3 +38,10 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(ListGenius.Blazor.Client._Imports).Assembly);
 
 app.Run();
+
+static void CreateDatabase(WebApplication app)
+{
+    var serviceScope = app.Services.CreateScope();
+    var dataContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+    dataContext?.Database.EnsureCreated();
+}

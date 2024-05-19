@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alunos.Model", "Alunos.Model\Alunos.Model.csproj", "{ADBE9A48-F93B-4454-A2DE-2286AB36088D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alunos.Web", "Alunos.Web\Alunos.Web.csproj", "{79D21A3B-9B47-40F4-927C-C920D1BC360B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADBE9A48-F93B-4454-A2DE-2286AB36088D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADBE9A48-F93B-4454-A2DE-2286AB36088D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADBE9A48-F93B-4454-A2DE-2286AB36088D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADBE9A48-F93B-4454-A2DE-2286AB36088D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79D21A3B-9B47-40F4-927C-C920D1BC360B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79D21A3B-9B47-40F4-927C-C920D1BC360B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79D21A3B-9B47-40F4-927C-C920D1BC360B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79D21A3B-9B47-40F4-927C-C920D1BC360B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {78FF5371-BAAD-480E-BD2B-73EAEF3EFE2D}
+	EndGlobalSection
+EndGlobal

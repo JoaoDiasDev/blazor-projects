@@ -1,0 +1,18 @@
+﻿@page "/print"
+@inject IJSRuntime IJS
+
+<h3>Imprimindo...</h3>
+<img src="/images/printanima1.gif" width="300" height="300" class="img-fluid"/>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await PrintEmployees();
+    }
+
+    public async Task PrintEmployees()
+    {
+        await IJS.InvokeAsync<object>("open", new object[] { "/printEmployees", "_blank" });
+    }
+}

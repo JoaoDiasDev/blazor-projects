@@ -1,0 +1,81 @@
+﻿@page "/produtos/create"
+@inject BlazorDemo.Data.BlazorDemoContext DB
+@using BlazorDemo.Models
+@using Microsoft.EntityFrameworkCore
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>Produto</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Produto" OnValidSubmit="AddProduto" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label> 
+                <InputText id="nome" @bind-Value="Produto.Nome" class="form-control" /> 
+                <ValidationMessage For="() => Produto.Nome" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descricao:</label> 
+                <InputText id="descricao" @bind-Value="Produto.Descricao" class="form-control" /> 
+                <ValidationMessage For="() => Produto.Descricao" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="imagemurl" class="form-label">ImagemUrl:</label> 
+                <InputText id="imagemurl" @bind-Value="Produto.ImagemUrl" class="form-control" /> 
+                <ValidationMessage For="() => Produto.ImagemUrl" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="preco" class="form-label">Preco:</label> 
+                <InputNumber id="preco" @bind-Value="Produto.Preco" class="form-control" /> 
+                <ValidationMessage For="() => Produto.Preco" class="text-danger" /> 
+            </div>        
+           @*  <div class="mb-3">
+                <label for="categoriaid" class="form-label">CategoriaId:</label> 
+                <InputNumber id="categoriaid" @bind-Value="Produto.CategoriaId" class="form-control" /> 
+                <ValidationMessage For="() => Produto.CategoriaId" class="text-danger" /> 
+            </div>    *@
+            <div class="mb-3">
+                <label for="categoriaid" class="form-label">Categoria:</label>
+                <select id="categoriaid" @bind="Produto.CategoriaId" class="form-control">
+                    @foreach (var categoria in Categorias)
+                    {
+                        <option value="@categoria.Id">@categoria.Nome</option>
+                    }
+                </select>
+                <ValidationMessage For="() => Produto.CategoriaId" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/produtos">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Produto Produto { get; set; } = new();
+
+    public List<Categoria> Categorias { get; set; } = new List<Categoria>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categorias = await DB.Categoria.ToListAsync();
+    }
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddProduto()
+    {
+        DB.Produto.Add(Produto);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/produtos");
+    }
+}

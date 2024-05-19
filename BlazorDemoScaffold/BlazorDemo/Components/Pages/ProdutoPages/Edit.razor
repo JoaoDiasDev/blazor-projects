@@ -1,0 +1,120 @@
+﻿@page "/Produtos/edit"
+@inject BlazorDemo.Data.BlazorDemoContext DB
+@using BlazorDemo.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Produto</h4>
+<hr />
+@if (Produto is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Produto" OnValidSubmit="UpdateProduto" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Produto.Id" value="@Produto.Id" />
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome:</label>
+                    <InputText id="nome" @bind-Value="Produto.Nome" class="form-control" />
+                    <ValidationMessage For="() => Produto.Nome" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="descricao" class="form-label">Descricao:</label>
+                    <InputText id="descricao" @bind-Value="Produto.Descricao" class="form-control" />
+                    <ValidationMessage For="() => Produto.Descricao" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="imagemurl" class="form-label">ImagemUrl:</label>
+                    <InputText id="imagemurl" @bind-Value="Produto.ImagemUrl" class="form-control" />
+                    <ValidationMessage For="() => Produto.ImagemUrl" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="preco" class="form-label">Preco:</label>
+                    <InputNumber id="preco" @bind-Value="Produto.Preco" class="form-control" />
+                    <ValidationMessage For="() => Produto.Preco" class="text-danger" />
+                </div>
+               @*  <div class="mb-3">
+                    <label for="categoriaid" class="form-label">CategoriaId:</label>
+                    <InputNumber id="categoriaid" @bind-Value="Produto.CategoriaId" class="form-control" />
+                    <ValidationMessage For="() => Produto.CategoriaId" class="text-danger" />
+                </div> *@
+                <div class="mb-3">
+                    <label for="categoriaid" class="form-label">Categoria:</label>
+                    <select id="categoriaid" class="form-control" @bind="Produto.CategoriaId">
+                        @foreach (var categoria in categorias)
+                        {
+                            <option value="@categoria.Id">@categoria.Nome</option>
+                        }
+                    </select>
+                    <ValidationMessage For="() => Produto.CategoriaId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/produtos">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Produto? Produto { get; set; }
+
+    List<Categoria> categorias = new List<Categoria>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Produto ??= await DB.Produto.FirstOrDefaultAsync(m => m.Id == Id);
+        categorias = await DB.Categoria.ToListAsync();
+
+        if (Produto is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateProduto()
+    {
+        DB.Attach(Produto!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ProdutoExists(Produto!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/produtos");
+    }
+
+    bool ProdutoExists(int id)
+    {
+        return DB.Produto.Any(e => e.Id == id);
+    }
+}

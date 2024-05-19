@@ -1,0 +1,33 @@
+﻿@page "/categoria"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject BlazorDemo.Data.BlazorDemoContext DB
+@using BlazorDemo.Models
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="categoria/create">Create New</a>
+</p>
+
+<div class="card-container">
+    <div class="row">
+        @foreach (var categoria in DB.Categoria)
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p>@categoria.Nome</p>
+
+                        <div class="card-actions">
+                            <a href="@($"categoria/edit?id={categoria.Id}")">Edit</a> |
+                            <a href="@($"categoria/details?id={categoria.Id}")">Details</a> |
+                            <a href="@($"categoria/delete?id={categoria.Id}")">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

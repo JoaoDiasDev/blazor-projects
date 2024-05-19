@@ -1,0 +1,47 @@
+﻿@page "/contatos/details"
+@inject BlazorSQLServer.Data.ApplicationDbContext DB
+@using BlazorSQLServer.Data
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Contato</h4>
+    <hr />
+    @if (contato is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nome</dt>
+            <dd class="col-sm-10">@contato.Nome</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@contato.Email</dd>
+        </dl>
+        <div>
+            <a href="@($"/contatos/edit?id={contato.Id}")">Edit</a> |
+            <a href="@($"/contatos")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Contato? contato;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        contato = await DB.Contatos.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (contato is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

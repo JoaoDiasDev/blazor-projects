@@ -1,0 +1,23 @@
+﻿@page "/contatos"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject BlazorSQLServer.Data.ApplicationDbContext DB
+@using BlazorSQLServer.Data
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="contatos/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="DB.Contatos">
+    <PropertyColumn Property="contato => contato.Nome" />
+    <PropertyColumn Property="contato => contato.Email" />
+
+    <TemplateColumn Context="contato">
+        <a href="@($"contatos/edit?id={contato.Id}")">Edit</a> |
+        <a href="@($"contatos/details?id={contato.Id}")">Details</a> |
+        <a href="@($"contatos/delete?id={contato.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
